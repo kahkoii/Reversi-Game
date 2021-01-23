@@ -31,6 +31,12 @@ Board::Board() {
 	for (int i = 1; i < 7; i++) {
 		board[7][i]->LinkNodes(board[6][i], board[6][i + 1], board[7][i + 1], NULL, NULL, NULL, board[7][i - 1], board[6][i - 1]);
 	}
+
+	// Set middle pieces
+	board[3][3]->SetColour(0);
+	board[3][4]->SetColour(1);
+	board[4][3]->SetColour(1);
+	board[4][4]->SetColour(0);
 }
 
 Board::~Board() {
