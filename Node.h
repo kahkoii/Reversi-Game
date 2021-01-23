@@ -1,6 +1,7 @@
 #include <iostream>
-using namespace std;
 #pragma once
+using namespace std;
+
 class Node
 {
 private:
