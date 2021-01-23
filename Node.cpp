@@ -1,6 +1,6 @@
 #include "Node.h"
 Node::Node() {
-	Colour = NULL;
+	Colour = -1;
 	N = NULL;
 	NE = NULL;
 	E = NULL;
@@ -12,7 +12,7 @@ Node::Node() {
 }
 
 Node::~Node() {
-	Colour = NULL;
+	Colour = -1;
 	N = NULL;
 	NE = NULL;
 	E = NULL;

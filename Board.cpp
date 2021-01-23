@@ -19,7 +19,7 @@ Board::Board() {
 	// Middle rows
 	for (int i = 1; i < 7; i++) {
 		board[i][0]->LinkNodes(board[i - 1][0], board[i - 1][1], board[i][1], board[i + 1][1], board[i + 1][0], NULL, NULL, NULL); //L Node
-		for (int j = 0; j < 7; j++) {
+		for (int j = 1; j < 7; j++) {
 			board[i][j]->LinkNodes(board[i - 1][j], board[i - 1][j + 1], board[i][j + 1], board[i + 1][j + 1], board[i + 1][j], board[i + 1][j - 1], board[i][j - 1], board[i - 1][j - 1]);
 		}
 		board[i][7]->LinkNodes(board[i - 1][7], NULL, NULL, NULL, board[i + 1][7], board[i + 1][6], board[i][6], board[i - 1][6]); //R Node
@@ -37,6 +37,14 @@ Board::Board() {
 	board[3][4]->SetColour(1);
 	board[4][3]->SetColour(1);
 	board[4][4]->SetColour(0);
+	
+	// Intialize variables
+	totalPieces = 4;
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			grid[i][j] = board[i][j]->GetColour();
+		}
+	}
 }
 
 Board::~Board() {
@@ -52,18 +60,17 @@ int Board::GetPieces() {
 	return totalPieces;
 }
 
-int* Board::GetBoard(){
+void Board::UpdateGrid(int grid[8][8]){
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			grid[i][j] = board[i][j]->GetColour();
 		}
 	}
-	return *grid;
 }
 
 bool Board::PlacePiece(int row, int col, int colour) {
 	// Check if there is already a piece
-	if (board[row][col]->GetColour() == NULL){
+	if (board[row][col]->GetColour() == -1){
 		if (CheckValidity(row, col, colour)) {
 			board[row][col]->SetColour(colour);
 			board[row][col]->FlipRequest(colour, "N");
@@ -81,6 +88,6 @@ bool Board::PlacePiece(int row, int col, int colour) {
 	return false;
 }
 
-bool CheckValidity(int row, int col, int colour) { //TODO
+bool Board::CheckValidity(int row, int col, int colour) { //TODO
 	return true;
 }
