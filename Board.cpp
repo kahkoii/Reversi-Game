@@ -91,3 +91,21 @@ bool Board::PlacePiece(int row, int col, int colour) {
 bool Board::CheckValidity(int row, int col, int colour) { //TODO
 	return true;
 }
+
+void Board::Print() {
+	int current;
+	cout << "\n------------------------\n";
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			current = board[i][j]->GetColour();
+			if (current == 0)
+				cout << "W ";
+			else if (current == 1)
+				cout << "B ";
+			else
+				cout << "O ";
+		}
+		cout << endl;
+	}
+	cout << "------------------------\n";
+}
