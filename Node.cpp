@@ -46,10 +46,33 @@ void Node::Flip() {
 	Colour = (Colour == 0) ? 1 : 0;
 }
 
+bool Node::FlipRequest(int colour) {
+	int n = 0;
+	if (N != NULL)
+		n += N->FlipRequest(colour, "N");
+	if (NE != NULL)
+		n += NE->FlipRequest(colour, "NE");
+	if (E != NULL)
+		n += E->FlipRequest(colour, "E");
+	if (SE != NULL)
+		n += SE->FlipRequest(colour, "SE");
+	if (S != NULL)
+		n += S->FlipRequest(colour, "S");
+	if (SW != NULL)
+		n += SW->FlipRequest(colour, "SW");
+	if (W != NULL)
+		n += W->FlipRequest(colour, "W");
+	if (NW != NULL)
+		n += NW->FlipRequest(colour, "NW");
+	if (n > 0)
+		return true;
+	return false;
+}
+
 bool Node::FlipRequest(int colour, string direction) {
 	// This function flips pieces accordingly, and returns 
 	// a boolean that determines if something has been flipped
-	if (Colour == NULL) {
+	if (Colour == -1) {
 		// If the edge is reached, stop the flip request
 		return false;
 	}

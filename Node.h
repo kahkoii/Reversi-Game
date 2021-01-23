@@ -5,7 +5,7 @@ using namespace std;
 class Node
 {
 private:
-	int Colour; //0 for white, 1 for black, NULL for empty
+	int Colour; //0 for white, 1 for black, -1 for empty
 	Node* N;
 	Node* NE;
 	Node* E;
@@ -27,6 +27,8 @@ public:
 	int GetColour();
 
 	void Flip();
+
+	bool FlipRequest(int colour);
 
 	bool FlipRequest(int colour, string direction);
 };

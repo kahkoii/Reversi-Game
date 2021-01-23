@@ -73,14 +73,7 @@ bool Board::PlacePiece(int row, int col, int colour) {
 	if (board[row][col]->GetColour() == -1){
 		if (CheckValidity(row, col, colour)) {
 			board[row][col]->SetColour(colour);
-			board[row][col]->FlipRequest(colour, "N");
-			board[row][col]->FlipRequest(colour, "NE");
-			board[row][col]->FlipRequest(colour, "E");
-			board[row][col]->FlipRequest(colour, "SE");
-			board[row][col]->FlipRequest(colour, "S");
-			board[row][col]->FlipRequest(colour, "SW");
-			board[row][col]->FlipRequest(colour, "W");
-			board[row][col]->FlipRequest(colour, "NW");
+			board[row][col]->FlipRequest(colour);
 			totalPieces += 1;
 			return true;
 		}
@@ -94,18 +87,18 @@ bool Board::CheckValidity(int row, int col, int colour) { //TODO
 
 void Board::Print() {
 	int current;
-	cout << "\n------------------------\n";
+	cout << "\n-----------------\n";
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			current = board[i][j]->GetColour();
 			if (current == 0)
-				cout << "W ";
+				cout << " W";
 			else if (current == 1)
-				cout << "B ";
+				cout << " B";
 			else
-				cout << "O ";
+				cout << " O";
 		}
 		cout << endl;
 	}
-	cout << "------------------------\n";
+	cout << "-----------------\n";
 }
