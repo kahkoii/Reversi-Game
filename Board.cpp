@@ -87,18 +87,21 @@ bool Board::CheckValidity(int row, int col, int colour) { //TODO
 
 void Board::Print() {
 	int current;
-	cout << "\n-----------------\n";
+	cout << endl;
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			current = board[i][j]->GetColour();
 			if (current == 0)
-				cout << " W";
+				cout << "\033[42;37m O \033[0m";
 			else if (current == 1)
-				cout << " B";
+				cout << "\033[42;30m O \033[0m";
 			else
-				cout << " O";
+				cout << "\033[42;31m   \033[0m";
+			if (j != 7)
+				cout << "\033[42;30m|\033[0m";
 		}
-		cout << endl;
+		if (i != 7)
+			cout << "\n\033[42;30m-------------------------------\033[0m\n";
 	}
-	cout << "-----------------\n";
+	cout << endl;
 }
