@@ -7,7 +7,6 @@ class Board
 {
 private:
 	Node* board[8][8];
-	int grid[8][8];
 	int totalPieces;
 	bool CheckValidity(int row, int col, int colour);
 
@@ -24,6 +23,12 @@ public:
 
 	// Places a piece and updates the board accordingly
 	bool PlacePiece(int row, int col, int colour);
+
+	// Takes in an 8x8 array and sets the board to that state
+	void SetBoard(int grid[8][8]);
+
+	// Returns the number of enemy pieces captured if the move is made
+	int Foresight(int row, int col, int colour);
 
 	// Prints the current board state, W - white, B- Black, O - Empty
 	void Print();

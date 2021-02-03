@@ -40,11 +40,6 @@ Board::Board() {
 	
 	// Intialize variables
 	totalPieces = 4;
-	for (int i = 0; i < 8; i++) {
-		for (int j = 0; j < 8; j++) {
-			grid[i][j] = board[i][j]->GetColour();
-		}
-	}
 }
 
 Board::~Board() {
@@ -83,6 +78,28 @@ bool Board::PlacePiece(int row, int col, int colour) {
 
 bool Board::CheckValidity(int row, int col, int colour) { //TODO
 	return true;
+}
+
+void Board::SetBoard(int grid[8][8]) {
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			board[i][j]->SetColour(grid[i][j]);
+		}
+	}
+}
+
+int Board::Foresight(int row, int col, int colour) {
+	int currentGrid[8][8], changes = -1;
+	UpdateGrid(currentGrid);
+	PlacePiece(row, col, colour);
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			if (board[i][j]->GetColour() != currentGrid[i][j])
+				changes += 1;
+		}
+	}
+	SetBoard(currentGrid);
+	return changes;
 }
 
 void Board::Print() {

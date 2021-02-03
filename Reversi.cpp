@@ -9,4 +9,8 @@ int main()
     board.Print();
     board.PlacePiece(2, 5, 1);
     board.Print();
+    board.PlacePiece(3, 5, 0);
+    board.Print();
+    cout << board.Foresight(1,5,0);
+    board.Print();
 }
