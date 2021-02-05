@@ -104,8 +104,9 @@ int Board::Foresight(int row, int col, int colour) {
 
 void Board::Print() {
 	int current;
-	cout << endl;
+	cout << endl << "   1   2   3   4   5   6   7   8\n";
 	for (int i = 0; i < 8; i++) {
+		cout << i + 1 << " ";
 		for (int j = 0; j < 8; j++) {
 			current = board[i][j]->GetColour();
 			if (current == 0)
@@ -117,8 +118,10 @@ void Board::Print() {
 			if (j != 7)
 				cout << "\033[42;30m|\033[0m";
 		}
-		if (i != 7)
-			cout << "\n\033[42;30m-------------------------------\033[0m\n";
+		if (i == 3)
+			cout << "\033[30; 30m . \033[0m" << "\n  \033[42;30m-------------------------------\033[0m Y\n";
+		else if (i != 7)
+			cout << "\033[30; 30m . \033[0m" << "\n  \033[42;30m-------------------------------\033[0m" << "\033[30; 30m . \033[0m\n";
 	}
-	cout << endl;
+	cout << "\033[30; 30m . \033[0m" << "\n   . . . . . . . X . . . . . . . .\n\n";
 }
