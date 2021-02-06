@@ -1,7 +1,15 @@
 #include <iostream>
+#include <vector>
+#include <string>
 #include "Node.h"
 #pragma once
 using namespace std;
+
+// Start from 0, x and y correspond to col and row respectively
+struct Coordinates {
+	int x, y;
+	Coordinates(int a, int b) { x = a; y = b; }
+};
 
 class Board
 {
@@ -32,6 +40,15 @@ public:
 
 	// Returns the number of enemy pieces captured if the move is made
 	int Foresight(int row, int col, int colour);
+
+	// Returns a vector with the coordinates of all possible moves
+	vector<Coordinates> UpdateMoveSet(int colour, bool print = false);
+
+	// Check if coordinate is in the moveset
+	bool ValidCoordinates(vector<Coordinates>& vec, Coordinates c);
+
+	// Returns the winner, 'w' - white, 'b' - black, 't' - tie
+	char GetWinner();
 
 	// Prints the current board state, W - white, B- Black, O - Empty
 	void Print();
