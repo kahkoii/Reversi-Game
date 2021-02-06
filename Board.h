@@ -18,6 +18,9 @@ public:
 	// Gets the total number of pieces on the board
 	int GetPieces();
 
+	// Gets the colour of the piece at the stated coordinates
+	int GetPieceColour(int x, int y);
+
 	// Updates the 8x8 array passed in with the board state
 	void UpdateGrid(int grid[8][8]);
 
