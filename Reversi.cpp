@@ -15,21 +15,49 @@ int main()
         { -1, -1, -1, -1, -1, -1, -1, -1}
     };
 
-    //TODO: Check for number of valid moves OR skip, 
+    //Declarations 
     int x, y, colour = 1, turn = 1;
-    bool playing = true, alreadySkipped = false;
+    bool playing = true, skipped = false;
     string currentPlayer = "Black";
+    vector<Coordinates> moveSet;
+    Coordinates current(0, 0);
     Board board;
     //board.SetBoard(debug);
     board.Print();
+
+    // Game Loop
     while (playing) {
+
+        // Check win condition
+        moveSet = board.UpdateMoveSet(colour, true);
+        if (turn > 4 && moveSet.empty()) {
+            if (board.GetPieces() == 64) {
+                break;
+            }
+            else {
+                cout << "\n<Turn Skip> There are no valid moves for " << currentPlayer << ". <Turn Skip>\n";
+                if (skipped == true)
+                    break;
+                else {
+                    skipped = true;
+                    colour = (colour ? 0 : 1);
+                    currentPlayer = (currentPlayer == "Black" ? "White" : "Black");
+                    turn++;
+                    continue;
+                }
+            }
+        }
+
+        // Get input
         cout << "[ " << currentPlayer <<" ] Enter coordinates (x space y): ";
         cin >> x >> y;
+
+        // Input validation
         if (x > 8 || x < 1 || y > 8 || y < 0) {
             cout << "<Invalid Move> Not a valid tile location. <Invalid Move>\n";
             continue;
         }
-        if (turn == 5) break;
+
         if (turn <= 4) {
             if ((x == 4 || x == 5) && (y == 4 || y == 5)) {
                 if (board.Foresight(y - 1, x - 1, colour) == 0) {
@@ -47,7 +75,8 @@ int main()
             }
         }
         else {
-            if (board.Foresight(y - 1, x - 1, colour) > 0) {
+            current.x = x - 1; current.y = y - 1;
+            if (board.ValidCoordinates(moveSet, current)) {
                 board.PlacePiece(y - 1, x - 1, colour);
                 board.Print();
             }
@@ -61,8 +90,10 @@ int main()
         currentPlayer = (currentPlayer == "Black" ? "White" : "Black");
         turn++;
     }
+
+    // Declaring winner
     char winner = board.GetWinner();
-    if (winner == 'w') cout << "White wins!";
-    else if (winner == 'b') cout << "Black wins!";
-    else cout << "It's a tie!";
+    if (winner == 'w') cout << "White wins!\n";
+    else if (winner == 'b') cout << "Black wins!\n";
+    else cout << "It's a tie!\n";
 }

@@ -100,6 +100,34 @@ int Board::Foresight(int row, int col, int colour) {
 	return changes;
 }
 
+vector<Coordinates> Board::UpdateMoveSet(int colour, bool print) {
+	vector<Coordinates> vec;
+	string moves = "\nPossible Moves: ";
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			// If the tile is null, check if move captures
+			if (board[i][j]->GetColour() == -1) {
+				if (Foresight(i, j, colour) > 0) {
+					Coordinates c = Coordinates(j, i);
+					moves = moves + "(" + to_string(j + 1) + ", " + to_string(i + 1) + ") ";
+					vec.push_back(c);
+				}
+			}
+			else continue;
+		}
+	}
+	if (print) cout << moves << endl << endl;
+	return vec;
+}
+
+bool Board::ValidCoordinates(vector<Coordinates> &vec, Coordinates c) {
+	for (Coordinates &i : vec) {
+		if (i.x == c.x && i.y == c.y)
+			return true;
+	}
+	return false;
+}
+
 char Board::GetWinner() {
 	int w = 0, b = 0;
 	for (int i = 0; i < 8; i++) {
