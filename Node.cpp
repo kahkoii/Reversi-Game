@@ -80,22 +80,46 @@ bool Node::FlipRequest(int colour, string direction) {
 		// If the current colour still does not match the colour of the
 		// placed piece, continue sending requests in the same direction
 		bool status;
-		if (direction == "N")
+		if (direction == "N") {
+			if (N == NULL)
+				return false;
 			status = N->FlipRequest(colour, direction);
-		else if(direction == "NE")
+		}
+		else if (direction == "NE") {
+			if (NE == NULL)
+				return false;
 			status = NE->FlipRequest(colour, direction);
-		else if (direction == "E")
+		}
+		else if (direction == "E") {
+			if (E == NULL)
+				return false;
 			status = E->FlipRequest(colour, direction);
-		else if (direction == "SE")
+		}
+		else if (direction == "SE") {
+			if (SE == NULL)
+				return false;
 			status = SE->FlipRequest(colour, direction);
-		else if (direction == "S")
+		}
+		else if (direction == "S") {
+			if (S == NULL)
+				return false;
 			status = S->FlipRequest(colour, direction);
-		else if (direction == "SW")
+		}
+		else if (direction == "SW") {
+			if (SW == NULL)
+				return false;
 			status = SW->FlipRequest(colour, direction);
-		else if (direction == "W")
+		}
+		else if (direction == "W") {
+			if (W == NULL)
+				return false;
 			status = W->FlipRequest(colour, direction);
-		else
+		}
+		else {
+			if (NW == NULL)
+				return false;
 			status = NW->FlipRequest(colour, direction);
+		}
 
 		// Flip for the current one and return
 		if (status)
