@@ -16,15 +16,24 @@ void AI::init(int aiPlayer) {
 	}
 }
 
-void AI::performMove(Board& board) {
+AiMove AI::performMove(Board& board) {
 	AiMove bestMove = getBestMove(board, 3, _aiPlayer, AiMove(0));
-	board.PlacePiece(bestMove.y, bestMove.x, _aiPlayer);
+	return bestMove;
 }
 
-AiMove AI::getBestMove(Board board, int depth, int player, AiMove moveTemp) {
+AiMove AI::getBestMove(Board& board, int depth, int player, AiMove moveTemp) {
 	if (depth == 0) {
-		int flips = board.Foresight(moveTemp.y, moveTemp.x, player);
-		return AiMove(flips);
+		std::cout << "depth0: " << moveTemp.x + 1 << "-" << moveTemp.y + 1 << "\n";
+		if (player == _humanPlayer) {
+			int flips = board.Foresight(moveTemp.y, moveTemp.x, _aiPlayer);
+			std::cout << "a flips: " << flips << "\n";
+			return AiMove(flips);
+		}
+		if (player == _aiPlayer) {
+			int flips = board.Foresight(moveTemp.y, moveTemp.x, _humanPlayer);
+			std::cout << "h flips: "<< flips << "\n";
+			return AiMove(-flips);
+		}
 	}
 
 	std::vector<AiMove> moves;
@@ -40,6 +49,9 @@ AiMove AI::getBestMove(Board board, int depth, int player, AiMove moveTemp) {
 				Board boardCopy = board;
 				if (depth > 1) { board.PlacePiece(y, x, player); }
 
+				std::cout << move.x + 1 << move.y + 1 << "-" << depth << "-" << player << "\n";
+				board.Print();
+
 				if (player == _aiPlayer) {
 					move.score = getBestMove(board, depth - 1, _humanPlayer, move).score;
 				}
@@ -47,8 +59,10 @@ AiMove AI::getBestMove(Board board, int depth, int player, AiMove moveTemp) {
 					move.score = getBestMove(board, depth - 1, _aiPlayer, move).score;
 				}
 
+				std::cout << move.x + 1 << move.y + 1 << "-" << move.score << "-" << depth <<"\n";
 				moves.push_back(move);
 				board = boardCopy; // Return board to previous state
+				board.Print();
 			}
 		}
 	}
