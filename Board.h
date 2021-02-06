@@ -33,6 +33,9 @@ public:
 	// Returns the number of enemy pieces captured if the move is made
 	int Foresight(int row, int col, int colour);
 
+	// Returns the winner, 'w' - white, 'b' - black, 't' - tie
+	char GetWinner();
+
 	// Prints the current board state, W - white, B- Black, O - Empty
 	void Print();
 };

@@ -100,6 +100,23 @@ int Board::Foresight(int row, int col, int colour) {
 	return changes;
 }
 
+char Board::GetWinner() {
+	int w = 0, b = 0;
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			if (board[i][j]->GetColour() == 0)
+				w++;
+			else if (board[i][j]->GetColour() == 1)
+				b++;
+		}
+	}
+	cout << "\n==============================\n[Final Score]\n";
+	cout << "White: " << w << " Black: " << b << "\n==============================\n";
+	if (w > b) return 'w';
+	else if (b > w) return 'b';
+	else return 't';
+}
+
 void Board::Print() {
 	int current;
 	cout << endl << "   1   2   3   4   5   6   7   8\n";
