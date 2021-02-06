@@ -2,6 +2,8 @@
 #include "Board.h"
 
 struct AiMove {
+	AiMove() {};
+	AiMove(int Score) : score(Score) {};
 	int x;
 	int y;
 	int score;
@@ -15,7 +17,7 @@ public:
 	void performMove(Board& board);
 
 private:
-	AiMove getBestMove(Board& board, int depth, int player);
+	AiMove getBestMove(Board board, int depth, int player, AiMove move);
 
 	int _aiPlayer;
 	int _humanPlayer;
