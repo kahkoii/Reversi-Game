@@ -2,27 +2,55 @@
 #include <ctime>
 #include "Board.h"
 #include "AI.h"
+#include "MoveHistory.h"
+using namespace std;
 
+MoveHistory play(int gameMode);
 int getGameMode();
 int getStartingPlayer();
 bool getDisplayAiProcess();
+void viewHistory(MoveHistory hist);
 
 int main()
 {
-    int debug[8][8] = 
-    {
-        { -1, -1, -1, -1, -1, -1, -1, -1},
-        { -1, -1, -1, -1, -1, 0, 1, -1},
-        { -1, -1, -1, -1, 1, 0, -1, -1},
-        { -1, -1, -1, 1, 1, 0, -1, -1},
-        { -1, -1, -1, 0, 0, 0, 0, 0},
-        { -1, -1, -1, -1, -1, -1, -1, -1},
-        { -1, -1, -1, -1, -1, -1, -1, -1},
-        { -1, -1, -1, -1, -1, -1, -1, -1}
+    int gameMode;
+    //declare history logs here
+    MoveHistory hist; // SHOULD BE LOGS INSTEAD
+
+    // Game setup
+    while (true) {
+        gameMode = getGameMode();
+        // If playing a game
+        if (gameMode == 1 || gameMode == 2) {
+            hist = play(gameMode); // SHOULD PASS TO LOGS INSTEAD
+        }
+        else if (gameMode == 3){
+            viewHistory(hist);
+        }
+        else {
+            break;
+        }
+    }
+}
+
+// Plays the game and returns the move history
+MoveHistory play(int gameMode) {
+    
+    MoveHistory hist;
+    Grid grid;
+
+    Grid temp = {
+        { 1, 1, 1, 1, 1, 1, 1, 1},
+        { 1, 1, 1, 1, 1, 1, 1, 1},
+        { 1, 1, -1, -1,-1, -1, 1, 1},
+        { 1, 1, -1, -1, -1, -1, 0, 1},
+        { 1, 1, -1, -1, -1, -1, 0, 1},
+        { 1, 1, -1, -1, -1, -1, 1, 1},
+        { 1, 1, 1, 1, 0, 1, 1, 1},
+        { 1, 1, 1, 1, 0, 1, 1, 1}
     };
 
-    // Startup
-    int gameMode{ getGameMode() };
+    // AI setup
     AI reversiAI;
     int startingPlayer;
     bool displayAiProcess;
@@ -32,23 +60,24 @@ int main()
         displayAiProcess = getDisplayAiProcess();
     }
 
-    // Declarations 
+    // Board setup 
     int x, y, colour = 1, turn = 1;
-    bool playing = true, skipped = false;
+    bool skipped = false;
     string currentPlayer = "Black";
     vector<Coordinates> moveSet;
     Coordinates current(0, 0);
     Board board;
-    //board.SetBoard(debug);
-    board.Print();
+    //board.SetBoard(temp); //TEST
 
     // Game Loop
-    while (playing) {
-
+    cout << "\n===================\n     Play Game\n===================\n  [ -1 to exit ]\n";
+    board.Print();
+    while (true) {
         // Check win condition
         moveSet = board.UpdateMoveSet(colour, true);
         if (turn > 4 && moveSet.empty()) {
             if (board.GetPieces() == 64) {
+                cout << "\nBoard has been filled.\n";
                 break;
             }
             else {
@@ -66,7 +95,7 @@ int main()
         }
 
         // Single Player (Against AI)
-        if (gameMode == 1) 
+        if (gameMode == 1)
         {
             if (colour == startingPlayer) {
                 cout << "[ " << currentPlayer << " ] AI turn\n";
@@ -80,6 +109,9 @@ int main()
                         if (board.Foresight(y - 1, x - 1, colour) == 0) {
                             board.PlacePiece(y - 1, x - 1, colour);
                             board.Print();
+                            // History
+                            board.UpdateGrid(grid);
+                            hist.Insert(grid);
                             break;
                         }
                     }
@@ -94,11 +126,18 @@ int main()
                     cout << "AI Move: (" << move.x + 1 << ", " << move.y + 1 << ")\n";
                     current.x = move.x; current.y = move.y;
                     board.Print();
+                    // History
+                    board.UpdateGrid(grid);
+                    hist.Insert(grid);
                 }
             }
             else {
                 cout << "[ " << currentPlayer << " ] Enter coordinates (x space y): ";
-                cin >> x >> y;
+                cin >> x;
+                // Force exit game
+                if (x == -1)
+                    return hist;
+                cin >> y;
 
                 if (x > 8 || x < 1 || y > 8 || y < 0) {
                     cout << "<Invalid Move> Not a valid tile location. <Invalid Move>\n";
@@ -110,6 +149,9 @@ int main()
                         if (board.Foresight(y - 1, x - 1, colour) == 0) {
                             board.PlacePiece(y - 1, x - 1, colour);
                             board.Print();
+                            // History
+                            board.UpdateGrid(grid);
+                            hist.Insert(grid);
                         }
                         else {
                             cout << "<Invalid Move> Tile already occupied. <Invalid Move>\n";
@@ -126,6 +168,9 @@ int main()
                     if (board.ValidCoordinates(moveSet, current)) {
                         board.PlacePiece(y - 1, x - 1, colour);
                         board.Print();
+                        // History
+                        board.UpdateGrid(grid);
+                        hist.Insert(grid);
                     }
                     else {
                         cout << "<Invalid Move> Move must capture at least 1 piece, try again. <Invalid Move>\n";
@@ -139,7 +184,11 @@ int main()
         {
             // Get input
             cout << "[ " << currentPlayer << " ] Enter coordinates (x space y): ";
-            cin >> x >> y;
+            cin >> x;
+            // Force exit game
+            if (x == -1)
+                return hist;
+            cin >> y;
 
             // Input validation
             if (x > 8 || x < 1 || y > 8 || y < 0) {
@@ -152,6 +201,9 @@ int main()
                     if (board.Foresight(y - 1, x - 1, colour) == 0) {
                         board.PlacePiece(y - 1, x - 1, colour);
                         board.Print();
+                        // History
+                        board.UpdateGrid(grid);
+                        hist.Insert(grid);
                     }
                     else {
                         cout << "<Invalid Move> Tile already occupied. <Invalid Move>\n";
@@ -168,6 +220,9 @@ int main()
                 if (board.ValidCoordinates(moveSet, current)) {
                     board.PlacePiece(y - 1, x - 1, colour);
                     board.Print();
+                    // History
+                    board.UpdateGrid(grid);
+                    hist.Insert(grid);
                 }
                 else {
                     cout << "<Invalid Move> Move must capture at least 1 piece, try again. <Invalid Move>\n";
@@ -187,20 +242,22 @@ int main()
     if (winner == 'w') cout << "White wins!\n";
     else if (winner == 'b') cout << "Black wins!\n";
     else cout << "It's a tie!\n";
+
+    return hist;
 }
 
 int getGameMode()
 {
-    int gameMode{};
+    int gameMode;
     while (true) {
-        std::cout << "Game Modes:\nSingleplayer - Enter 1\nMultiplayer  - Enter 2\n\nSelect game mode: ";
-        std::cin >> gameMode;
-        if (gameMode != 1 && gameMode != 2) {
-            std::cout << "Invalid Gamemode!\n\n";
+        cout << "Game Modes:\nSingleplayer - Enter 1\nMultiplayer  - Enter 2\nView History - Enter 3\nExit         - Enter 4\n\nSelect game mode: ";
+        cin >> gameMode;
+        if (gameMode < 1 || gameMode > 4) {
+            cout << "Invalid Gamemode!\n\n";
         }
         else { break; }
     }
-    std::cout << "-----------------------------------\n";
+    cout << "-----------------------------------\n";
     return gameMode;
 }
 
@@ -208,14 +265,14 @@ int getStartingPlayer()
 {
     char choice{};
     while (true) {
-        std::cout << "Would you like to go first? (y/n): ";
-        std::cin >> choice;
+        cout << "Would you like to go first? (y/n): ";
+        cin >> choice;
         if (choice != 'y' && choice != 'n') {
-            std::cout << "Invalid Choice!\n\n";
+            cout << "Invalid Choice!\n\n";
         }
         else { break; }
     }
-    std::cout << "-----------------------------------\n";
+    cout << "-----------------------------------\n";
     if (choice == 'y') {
         return 0;
     }
@@ -226,16 +283,52 @@ bool getDisplayAiProcess()
 {
     char choice{};
     while (true) {
-        std::cout << "Would you like to display AI move finding process? (y/n): ";
-        std::cin >> choice;
+        cout << "Would you like to display AI move finding process? (y/n): ";
+        cin >> choice;
         if (choice != 'y' && choice != 'n') {
             std::cout << "Invalid Choice!\n\n";
         }
         else { break; }
     }
-    std::cout << "-----------------------------------\n";
+    cout << "-----------------------------------\n";
     if (choice == 'y') {
         return true;
     }
     else { return false; }
+}
+
+
+void viewHistory(MoveHistory hist) {
+    cout << "\n===================\n      History\n===================\n";
+    if (hist.GetTotalMoves() == 0) {
+        cout << "This game is invalid. No history to be viewed.\n\n";
+    }
+    else {
+        string input;
+        hist.Print();
+        while (true) {
+            cout << "\nCurrent Move: " << hist.GetCurrentMove() + 1 << "\n[1] Show Previous [2] Show Next [3] Exit\n";
+            cin >> input;
+            if (input == "1") {
+                if (hist.Previous()) {
+                    hist.Print();
+                }
+                else    
+                    cout << "\nThis is the first move, there is no previous.\n";
+            }
+            else if (input == "2") {
+                if (hist.Next()) {
+                    hist.Print();
+                }
+                else
+                    cout << "\nThis is the last move, there is no next.\n";
+            }
+            else if (input == "3") {
+                break;
+            }
+            else {
+                cout << "\n<Error> Invalid command, please try again. <Error>\n";
+            }
+        }
+    }
 }
