@@ -1,4 +1,8 @@
 #include "Board.h"
+
+const int iterateModes[4] = { 1, 2, 3, 4 };
+const int iterateDirections[2] = { -1, 1 };
+
 Board::Board() {
 	// Creates and sets up the board with standard config
 	// Fill the board array with empty nodes
@@ -100,6 +104,49 @@ int Board::Foresight(int row, int col, int colour) {
 	return changes;
 }
 
+bool Board::Iterate(int& y, int& x, const int mode, const int direction) {
+
+	if ((direction != 1) && (direction != -1))
+		return false;
+
+	switch (mode) {
+	case(1):
+		x += direction;
+		return true;
+	case(2):
+		y += direction;
+		return true;
+	case(3):
+		y += direction;
+		x += direction;
+		return true;
+	case(4):
+		y += direction;
+		x -= direction;
+		return true;
+	default:
+		cout << "THROWING BECAUSE mode = " << mode << endl;
+		throw;
+	}
+}
+
+bool Board::OnFrontier(int y, int x) {
+	if (board[y][x]->GetColour() == -1)
+		return false;
+	for (int n = 0; n < 4; n++) {
+		int mode = iterateModes[n];
+		for (int m = 0; m < 2; m++) {
+			int direction = iterateDirections[m];
+			int Y = y, X = x;
+			Iterate(Y, X, mode, direction);
+			if (x > 8 || x < 1 || y > 8 || y < 0)
+				if (board[Y][X]->GetColour() != -1)
+					return true;
+		}
+	}
+	return false;
+}
+
 vector<Coordinates> Board::UpdateMoveSet(int colour, bool print) {
 	vector<Coordinates> vec;
 	string moves = "\nPossible Moves: ";
@@ -126,6 +173,17 @@ bool Board::ValidCoordinates(vector<Coordinates> &vec, Coordinates c) {
 			return true;
 	}
 	return false;
+}
+
+int Board::GetScore(int colour) {
+	int score = 0;
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			if (board[i][j]->GetColour() == colour)
+				score++;
+		}
+	}
+	return score;
 }
 
 char Board::GetWinner() {

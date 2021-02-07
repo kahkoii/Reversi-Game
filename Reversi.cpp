@@ -8,6 +8,7 @@ using namespace std;
 MoveHistory play(int gameMode);
 int getGameMode();
 int getStartingPlayer();
+bool getDisplayAiProcess();
 void viewHistory(MoveHistory hist);
 
 int main()
@@ -52,9 +53,11 @@ MoveHistory play(int gameMode) {
     // AI setup
     AI reversiAI;
     int startingPlayer;
+    bool displayAiProcess;
     if (gameMode == 1) {
         startingPlayer = getStartingPlayer();
         reversiAI.init(startingPlayer);
+        displayAiProcess = getDisplayAiProcess();
     }
 
     // Board setup 
@@ -114,7 +117,11 @@ MoveHistory play(int gameMode) {
                     }
                 }
                 else {
-                    AiMove move = reversiAI.performMove(board);
+                    int currentGrid[8][8];
+                    board.UpdateGrid(currentGrid);
+                    Board child;
+                    child.SetBoard(currentGrid);
+                    AiMove move = reversiAI.getBestMove(child, displayAiProcess);
                     board.PlacePiece(move.y, move.x, colour);
                     cout << "AI Move: (" << move.x + 1 << ", " << move.y + 1 << ")\n";
                     current.x = move.x; current.y = move.y;
@@ -257,8 +264,7 @@ int getGameMode()
 
 int getStartingPlayer()
 {
-    char choice;
-    int startFirst;
+    char choice{};
     while (true) {
         cout << "Would you like to go first? (y/n): ";
         cin >> choice;
@@ -267,15 +273,31 @@ int getStartingPlayer()
         }
         else { break; }
     }
-
-    if (choice == 'y') {
-        startFirst = 0;
-    }
-    else { startFirst = 1; }
-
     cout << "-----------------------------------\n";
-    return startFirst;
+    if (choice == 'y') {
+        return 0;
+    }
+    else { return 1; }
 }
+
+bool getDisplayAiProcess()
+{
+    char choice{};
+    while (true) {
+        cout << "Would you like to display AI move finding process? (y/n): ";
+        cin >> choice;
+        if (choice != 'y' && choice != 'n') {
+            std::cout << "Invalid Choice!\n\n";
+        }
+        else { break; }
+    }
+    cout << "-----------------------------------\n";
+    if (choice == 'y') {
+        return true;
+    }
+    else { return false; }
+}
+
 
 void viewHistory(MoveHistory hist) {
     cout << "\n===================\n      History\n===================\n";
