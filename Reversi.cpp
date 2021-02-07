@@ -3,29 +3,60 @@
 #include "Board.h"
 #include "AI.h"
 #include "MoveHistory.h"
+#include "HistoryLog.h"
 using namespace std;
 
 MoveHistory play(int gameMode);
 int getGameMode();
 int getStartingPlayer();
 bool getDisplayAiProcess();
+HistoryLog history(HistoryLog logs);
 void viewHistory(MoveHistory hist);
 
 int main()
 {
     int gameMode;
     //declare history logs here
-    MoveHistory hist; // SHOULD BE LOGS INSTEAD
+    HistoryLog histLog;
 
     // Game setup
     while (true) {
         gameMode = getGameMode();
         // If playing a game
         if (gameMode == 1 || gameMode == 2) {
-            hist = play(gameMode); // SHOULD PASS TO LOGS INSTEAD
+            MoveHistory hist;
+            hist = play(gameMode);
+            histLog.insertRecord(hist);
         }
         else if (gameMode == 3){
-            viewHistory(hist);
+            cout << "\n===================\n      History\n===================\n";
+            int n;
+            while (true) {
+                histLog.display();
+                cout << "\nSelect action [1 - View] [2 - Delete]: ";
+                cin >> n;
+                // View specific match history
+                if (n == 1) {
+                    cout << "\nSelect match to view: ";
+                    cin >> n;
+                    MoveHistory hist = histLog.get(n);
+                    viewHistory(hist);
+                }
+                // Delete history from logs
+                else if (n == 2) {
+                    cout << "\nSelect match to delete: ";
+                    cin >> n;
+                    MoveHistory hist = histLog.get(n);
+                    histLog.deleteRecord(hist);
+                }
+                else if (n == -1) {
+                    cout << "\n";
+                    break;
+                }
+                else {
+                    cout << "\nInvalid input, please try again.\n";
+                }
+            }
         }
         else {
             break;
@@ -54,7 +85,7 @@ MoveHistory play(int gameMode) {
     AI reversiAI;
     int startingPlayer;
     bool displayAiProcess;
-    if (gameMode == 1) {
+    if (gameMode == 2) {
         startingPlayer = getStartingPlayer();
         reversiAI.init(startingPlayer);
         displayAiProcess = getDisplayAiProcess();
@@ -95,7 +126,7 @@ MoveHistory play(int gameMode) {
         }
 
         // Single Player (Against AI)
-        if (gameMode == 1)
+        if (gameMode == 2)
         {
             if (colour == startingPlayer) {
                 cout << "[ " << currentPlayer << " ] AI turn\n";
@@ -108,6 +139,7 @@ MoveHistory play(int gameMode) {
                         int y = arr[rand() % 2];
                         if (board.Foresight(y - 1, x - 1, colour) == 0) {
                             board.PlacePiece(y - 1, x - 1, colour);
+                            reversiAI.movesMade++;
                             board.Print();
                             // History
                             board.UpdateGrid(grid);
@@ -124,6 +156,9 @@ MoveHistory play(int gameMode) {
                     AiMove move = reversiAI.getBestMove(child, displayAiProcess);
                     board.PlacePiece(move.y, move.x, colour);
                     cout << "AI Move: (" << move.x + 1 << ", " << move.y + 1 << ")\n";
+                    cout << "States explored: " << reversiAI.movesMade << "\n";
+                    reversiAI.accumulatedMoves += reversiAI.movesMade;
+                    cout << "Accumulated states: " << reversiAI.accumulatedMoves << "\n";
                     current.x = move.x; current.y = move.y;
                     board.Print();
                     // History
@@ -239,9 +274,9 @@ MoveHistory play(int gameMode) {
 
     // Declaring winner
     char winner = board.GetWinner();
-    if (winner == 'w') cout << "White wins!\n";
-    else if (winner == 'b') cout << "Black wins!\n";
-    else cout << "It's a tie!\n";
+    if (winner == 'w') cout << "White wins!\n\n";
+    else if (winner == 'b') cout << "Black wins!\n\n";
+    else cout << "It's a tie!\n\n";
 
     hist.SetWinner(winner);
     return hist;
@@ -251,7 +286,7 @@ int getGameMode()
 {
     int gameMode;
     while (true) {
-        cout << "Game Modes:\nSingleplayer - Enter 1\nMultiplayer  - Enter 2\nView History - Enter 3\nExit         - Enter 4\n\nSelect game mode: ";
+        cout << "Game Modes:\nMultiplayer  - Enter 1\nSingleplayer - Enter 2\nView History - Enter 3\nExit         - Enter 4\n\nSelect game mode: ";
         cin >> gameMode;
         if (gameMode < 1 || gameMode > 4) {
             cout << "Invalid Gamemode!\n\n";
@@ -298,9 +333,39 @@ bool getDisplayAiProcess()
     else { return false; }
 }
 
+HistoryLog history(HistoryLog logs){
+    int n;
+    logs.display();
+    while (true){
+        cout << "\nSelect action [1 - View] [2 - Delete]: ";
+        cin >> n;
+        // View specific match history
+        if (n == 1){
+            cout << "\nSelect match to view: ";
+            cin >> n;
+            MoveHistory hist = logs.get(n);
+            viewHistory(hist);
+            return logs;
+        }
+        // Delete history from logs
+        else if (n == 2){
+            cout << "\nSelect match to delete: ";
+            cin >> n;
+            MoveHistory hist = logs.get(n);
+            logs.deleteRecord(hist);
+            return logs;
+        }
+        else if (n == -1) {
+            cout << "\n";
+            return logs;
+        }
+        else{
+            cout << "\nInvalid input, please try again.\n";
+        }
+    }
+}
 
 void viewHistory(MoveHistory hist) {
-    cout << "\n===================\n      History\n===================\n";
     if (hist.GetTotalMoves() == 0) {
         cout << "This game is invalid. No history to be viewed.\n\n";
     }

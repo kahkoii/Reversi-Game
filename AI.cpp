@@ -20,6 +20,7 @@ AiMove AI::getBestMove(Board board, bool dispAI) {
 	int depth, eval, moveNum;
 	// int depthLimit = 64 - board.GetPieces();
 	int depthLimit = 3;
+	movesMade = 0;
 	AiMove move, bestMove;
 
 	vector<AiMove> moves;
@@ -42,7 +43,8 @@ AiMove AI::getBestMove(Board board, bool dispAI) {
 			child.SetBoard(currentGrid);
 
 			child.PlacePiece(moves[i].y, moves[i].x, _aiPlayer);
-			eval = performMiniMax(child, depth, _aiPlayer, dispAI);
+			movesMade++;
+			eval = performMiniMax(child, depth, alpha, beta, _aiPlayer, dispAI);
 
 			if (eval > alpha) {
 				move = moves[i];
@@ -149,7 +151,8 @@ int AI::heuristic(Board b) {
 	return pW * piececount + cW * corners + pcW * potentialCorners + eW * edges + fW * frontier + mW * mobility;
 }
 
-int AI::performMiniMax(Board board, int depth, int player, bool dispAI) {
+int AI::performMiniMax(Board board, int depth, int alpha, int beta, int player, bool dispAI) {
+	int a = alpha, b = beta;
 	if (dispAI) {
 		board.Print();
 	}
@@ -181,9 +184,14 @@ int AI::performMiniMax(Board board, int depth, int player, bool dispAI) {
 			child.SetBoard(currentGrid);
 
 			child.PlacePiece(moves[i].y, moves[i].x, player);
-			int eval = performMiniMax(child, depth, _humanPlayer, dispAI);
+			movesMade++;
+			int eval = performMiniMax(child, depth, a, b, _humanPlayer, dispAI);
 
 			v = ((v > eval) ? v : eval);
+
+			if (v >= beta)
+				return v;
+			a = ((a > v) ? a : v);
 		}
 		return v;
 	}
@@ -196,9 +204,14 @@ int AI::performMiniMax(Board board, int depth, int player, bool dispAI) {
 			child.SetBoard(currentGrid);
 
 			child.PlacePiece(moves[i].y, moves[i].x, player);
-			int eval = performMiniMax(child, depth, _aiPlayer, dispAI);
+			movesMade++;
+			int eval = performMiniMax(child, depth, a, b, _aiPlayer, dispAI);
 
 			v = ((v < eval) ? v : eval);
+
+			if (v <= a)
+				return v;
+			b = ((b < v) ? b : v);
 		}
 		return v;
 	}
