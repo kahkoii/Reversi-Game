@@ -23,8 +23,11 @@ int main()
         if (gameMode == 1 || gameMode == 2) {
             hist = play(gameMode); // SHOULD PASS TO LOGS INSTEAD
         }
-        else {
+        else if (gameMode == 3){
             viewHistory(hist);
+        }
+        else {
+            break;
         }
     }
 }
@@ -34,6 +37,17 @@ MoveHistory play(int gameMode) {
     
     MoveHistory hist;
     Grid grid;
+
+    Grid temp = {
+        { 1, 1, 1, 1, 1, 1, 1, 1},
+        { 1, 1, 1, 1, 1, 1, 1, 1},
+        { 1, 1, -1, -1,-1, -1, 1, 1},
+        { 1, 1, -1, -1, -1, -1, 0, 1},
+        { 1, 1, -1, -1, -1, -1, 0, 1},
+        { 1, 1, -1, -1, -1, -1, 1, 1},
+        { 1, 1, 1, 1, 0, 1, 1, 1},
+        { 1, 1, 1, 1, 0, 1, 1, 1}
+    };
 
     // AI setup
     AI reversiAI;
@@ -50,6 +64,7 @@ MoveHistory play(int gameMode) {
     vector<Coordinates> moveSet;
     Coordinates current(0, 0);
     Board board;
+    //board.SetBoard(temp); //TEST
 
     // Game Loop
     cout << "\n===================\n     Play Game\n===================\n  [ -1 to exit ]\n";
@@ -228,9 +243,9 @@ int getGameMode()
 {
     int gameMode;
     while (true) {
-        cout << "Game Modes:\nSingleplayer - Enter 1\nMultiplayer  - Enter 2\nView History - Enter 3\n\nSelect game mode: ";
+        cout << "Game Modes:\nSingleplayer - Enter 1\nMultiplayer  - Enter 2\nView History - Enter 3\nExit         - Enter 4\n\nSelect game mode: ";
         cin >> gameMode;
-        if (gameMode < 1 || gameMode > 3) {
+        if (gameMode < 1 || gameMode > 4) {
             cout << "Invalid Gamemode!\n\n";
         }
         else { break; }

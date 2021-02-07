@@ -20,8 +20,9 @@ private:
 	int currentMove;
 	int totalMoves;
 
-	// Changes the current grid to reflect what changed
+	// Changes the latest grid to reflect what changed
 	void ApplyChangeFilter();
+	// -1 null, 0 white, 1 black, 2 new white, 3 new black
 
 public:
 	MoveHistory();
@@ -42,6 +43,9 @@ public:
 
 	// Move to the previous move
 	bool Previous();
+
+	// Jump to respective move starting from 1
+	void JumpToMove(int newMove);
 
 	// Print the current move in the history list
 	void Print();
