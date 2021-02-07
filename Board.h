@@ -18,6 +18,9 @@ private:
 	int totalPieces;
 	bool CheckValidity(int row, int col, int colour);
 
+	// method to iterate through the board in one direction
+	bool Iterate(int& y, int& x, const int mode, const int direction);
+
 public:
 	Board();
 
@@ -41,11 +44,17 @@ public:
 	// Returns the number of enemy pieces captured if the move is made
 	int Foresight(int row, int col, int colour);
 
+	// checks whether a piece is on the frontier
+	bool OnFrontier(int y, int x);
+
 	// Returns a vector with the coordinates of all possible moves
 	vector<Coordinates> UpdateMoveSet(int colour, bool print = false);
 
 	// Check if coordinate is in the moveset
 	bool ValidCoordinates(vector<Coordinates>& vec, Coordinates c);
+
+	// Get score of selected colour
+	int GetScore(int colour);
 
 	// Returns the winner, 'w' - white, 'b' - black, 't' - tie
 	char GetWinner();

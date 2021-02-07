@@ -5,6 +5,7 @@
 
 int getGameMode();
 int getStartingPlayer();
+bool getDisplayAiProcess();
 
 int main()
 {
@@ -23,10 +24,12 @@ int main()
     // Startup
     int gameMode{ getGameMode() };
     AI reversiAI;
-    int startingPlayer{};
+    int startingPlayer;
+    bool displayAiProcess;
     if (gameMode == 1) {
         startingPlayer = getStartingPlayer();
         reversiAI.init(startingPlayer);
+        displayAiProcess = getDisplayAiProcess();
     }
 
     // Declarations 
@@ -82,7 +85,11 @@ int main()
                     }
                 }
                 else {
-                    AiMove move = reversiAI.performMove(board);
+                    int currentGrid[8][8];
+                    board.UpdateGrid(currentGrid);
+                    Board child;
+                    child.SetBoard(currentGrid);
+                    AiMove move = reversiAI.getBestMove(child, displayAiProcess);
                     board.PlacePiece(move.y, move.x, colour);
                     cout << "AI Move: (" << move.x + 1 << ", " << move.y + 1 << ")\n";
                     current.x = move.x; current.y = move.y;
@@ -200,7 +207,6 @@ int getGameMode()
 int getStartingPlayer()
 {
     char choice{};
-    int startFirst{};
     while (true) {
         std::cout << "Would you like to go first? (y/n): ";
         std::cin >> choice;
@@ -209,12 +215,27 @@ int getStartingPlayer()
         }
         else { break; }
     }
-
-    if (choice == 'y') {
-        startFirst = 0;
-    }
-    else { startFirst = 1; }
-
     std::cout << "-----------------------------------\n";
-    return startFirst;
+    if (choice == 'y') {
+        return 0;
+    }
+    else { return 1; }
+}
+
+bool getDisplayAiProcess()
+{
+    char choice{};
+    while (true) {
+        std::cout << "Would you like to display AI move finding process? (y/n): ";
+        std::cin >> choice;
+        if (choice != 'y' && choice != 'n') {
+            std::cout << "Invalid Choice!\n\n";
+        }
+        else { break; }
+    }
+    std::cout << "-----------------------------------\n";
+    if (choice == 'y') {
+        return true;
+    }
+    else { return false; }
 }

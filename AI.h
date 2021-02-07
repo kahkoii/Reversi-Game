@@ -14,10 +14,11 @@ public:
 	// Initialize AI player
 	void init(int aiPlayer);
 	// Perform AI move
-	AiMove performMove(Board& board);
+	AiMove getBestMove(Board board, bool dispAI);
 
 private:
-	AiMove getBestMove(Board& board, int depth, int player, AiMove move);
+	int performMiniMax(Board board, int depth, int player, bool dispAI);
+	int heuristic(Board b);
 
 	int _aiPlayer;
 	int _humanPlayer;
