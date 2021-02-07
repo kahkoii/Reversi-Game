@@ -19,6 +19,7 @@ private:
 	Move* last;
 	int currentMove;
 	int totalMoves;
+	char winner;
 
 	// Changes the latest grid to reflect what changed
 	void ApplyChangeFilter();
@@ -38,14 +39,17 @@ public:
 	// Get the total number of moves
 	int GetTotalMoves();
 
+	// Set winner of the match
+	void SetWinner(char result);
+
+	// Get winner
+	char GetWinner();
+
 	// Move to the next move
 	bool Next();
 
 	// Move to the previous move
 	bool Previous();
-
-	// Jump to respective move starting from 1
-	void JumpToMove(int newMove);
 
 	// Print the current move in the history list
 	void Print();

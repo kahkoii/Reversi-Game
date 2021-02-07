@@ -236,6 +236,7 @@ MoveHistory play(int gameMode) {
     else if (winner == 'b') cout << "Black wins!\n";
     else cout << "It's a tie!\n";
 
+    hist.SetWinner(winner);
     return hist;
 }
 

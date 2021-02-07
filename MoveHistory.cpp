@@ -1,6 +1,6 @@
 #include "MoveHistory.h"
 
-MoveHistory::MoveHistory() : first(NULL), current(NULL), last(NULL), currentMove(0), totalMoves(0) {}
+MoveHistory::MoveHistory() : first(NULL), current(NULL), last(NULL), currentMove(0), totalMoves(0), winner(-1) {}
 
 MoveHistory::~MoveHistory(){
 	/*
@@ -14,6 +14,7 @@ MoveHistory::~MoveHistory(){
 	last = NULL;
 	currentMove = 0;
 	totalMoves = 0;
+	winner = -1;
 }
 
 void MoveHistory::Insert(Grid grid) {
@@ -47,6 +48,10 @@ void MoveHistory::Insert(Grid grid) {
 int MoveHistory::GetCurrentMove() { return currentMove; }
 
 int MoveHistory::GetTotalMoves() { return totalMoves; }
+
+void MoveHistory::SetWinner(char result) { winner = result; }
+
+char MoveHistory::GetWinner() { return winner; }
 
 bool MoveHistory::Next() {
 	if (currentMove == totalMoves - 1)
