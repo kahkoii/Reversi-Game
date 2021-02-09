@@ -10,7 +10,6 @@ MoveHistory play(int gameMode);
 int getGameMode();
 int getStartingPlayer();
 bool getDisplayAiProcess();
-HistoryLog history(HistoryLog logs);
 void viewHistory(MoveHistory hist);
 
 int main()
@@ -29,10 +28,11 @@ int main()
             histLog.insertRecord(hist);
         }
         else if (gameMode == 3){
-            cout << "\n===================\n      History\n===================\n";
             int n;
             while (true) {
+                cout << "\n===================\n      History\n===================\n";
                 histLog.display();
+                if (histLog.isEmpty()) { cout << "History log is empty!\n"; }
                 cout << "\nSelect action [1 - View] [2 - Delete]: ";
                 cin >> n;
                 // View specific match history
@@ -46,8 +46,7 @@ int main()
                 else if (n == 2) {
                     cout << "\nSelect match to delete: ";
                     cin >> n;
-                    MoveHistory hist = histLog.get(n);
-                    histLog.deleteRecord(hist);
+                    histLog.deleteRecord(n);
                 }
                 else if (n == -1) {
                     cout << "\n";
@@ -331,38 +330,6 @@ bool getDisplayAiProcess()
         return true;
     }
     else { return false; }
-}
-
-HistoryLog history(HistoryLog logs){
-    int n;
-    logs.display();
-    while (true){
-        cout << "\nSelect action [1 - View] [2 - Delete]: ";
-        cin >> n;
-        // View specific match history
-        if (n == 1){
-            cout << "\nSelect match to view: ";
-            cin >> n;
-            MoveHistory hist = logs.get(n);
-            viewHistory(hist);
-            return logs;
-        }
-        // Delete history from logs
-        else if (n == 2){
-            cout << "\nSelect match to delete: ";
-            cin >> n;
-            MoveHistory hist = logs.get(n);
-            logs.deleteRecord(hist);
-            return logs;
-        }
-        else if (n == -1) {
-            cout << "\n";
-            return logs;
-        }
-        else{
-            cout << "\nInvalid input, please try again.\n";
-        }
-    }
 }
 
 void viewHistory(MoveHistory hist) {

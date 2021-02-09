@@ -22,7 +22,7 @@ public:
 	~HistoryLog();
 	bool isEmpty();
 	bool insertRecord(ItemType &item);
-	bool deleteRecord(ItemType &item);
+	bool deleteRecord(int index);
 	void display();
 	ItemType get(int index);
 };

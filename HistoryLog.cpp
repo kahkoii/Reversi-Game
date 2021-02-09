@@ -21,21 +21,23 @@ bool HistoryLog::isEmpty() {
 bool HistoryLog::insertRecord(ItemType &item) {
 	Record* newRecord = new Record;
 	newRecord->item = item;
+	newRecord->next = nullptr;
 	newRecord->next = top;
 	top = newRecord;
 	return true;
 }
 
-bool HistoryLog::deleteRecord(ItemType &item) {
+bool HistoryLog::deleteRecord(int index) {
 	if (!isEmpty()) {
-		item = top->item;
 		Record* temp = new Record;
 		temp = top;
 		top = top->next;
 		temp->next = nullptr;
 		delete temp;
+		cout << "\nHistory successfully deleted from log!\n";
 		return true;
 	}
+	cout << "\Invalid choice!\n";
 	return false;
 }
 
@@ -56,14 +58,18 @@ ItemType HistoryLog::get(int index) {
 	if (!isEmpty()) {
 		Record* current = top;
 		int count{ 1 };
-		while (current->next != nullptr) {
+		while (true) {
 			if (index == count) {
 				return (current->item);
 			}
-			current = current->next;
-			count++;
+			else if (current->next != nullptr) {
+				current = current->next;
+				count++;
+			}
+			else {
+				cout << "Invalid Choice!\n";
+				break;
+			}
 		}
-		cout << "Invalid Choice!\n";
-
 	}
 }
