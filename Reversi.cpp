@@ -46,6 +46,8 @@ int main()
                 else if (n == 2) {
                     cout << "\nSelect match to delete: ";
                     cin >> n;
+                    if (n == -1)
+                        break;
                     histLog.deleteRecord(n);
                 }
                 else if (n == -1) {
