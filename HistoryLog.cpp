@@ -46,18 +46,19 @@ void HistoryLog::display() {
 		Record* current = top;
 		int count{ 1 };
 		while (current->next != nullptr) {
-			if (current->item.GetWinner() == '-1')
-				cout << " " << count << " - No Winner\n";
-			else {
-				cout << " " << count << " - " << current->item.GetWinner() << '\n';
-				current = current->next;
-			}
+			char w = current->item.GetWinner();
+			if (w == 'n') cout << " " << count << " - No Winner\n";
+			else if (w == 'w') cout << " " << count << " - White\n";
+			else if (w == 'b') cout << " " << count << " - Black\n";
+			else cout << " " << count << " - Tie\n";
+			current = current->next;
 			count++;
 		}
-		if (current->item.GetWinner() == '-1')
-			cout << " " << count << " - No Winner\n";
-		else
-			cout << " " << count << " - " << current->item.GetWinner() << '\n';
+		char w = current->item.GetWinner();
+		if (w == 'n') cout << " " << count << " - No Winner\n";
+		else if (w == 'w') cout << " " << count << " - White\n";
+		else if (w == 'b') cout << " " << count << " - Black\n";
+		else cout << " " << count << " - Tie\n";
 	}
 }
 

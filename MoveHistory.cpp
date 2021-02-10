@@ -1,20 +1,14 @@
 #include "MoveHistory.h"
 
-MoveHistory::MoveHistory() : first(NULL), current(NULL), last(NULL), currentMove(0), totalMoves(0), winner(-1) {}
+MoveHistory::MoveHistory() : first(NULL), current(NULL), last(NULL), currentMove(0), totalMoves(0), winner('n') {}
 
 MoveHistory::~MoveHistory(){
-	/*
-	while (first != NULL) {
-		current = first;
-		first = first->next;
-		delete current;
-	}*/
 	first = NULL;
 	current = NULL;
 	last = NULL;
 	currentMove = 0;
 	totalMoves = 0;
-	winner = -1;
+	winner = 'n';
 }
 
 void MoveHistory::Insert(Grid grid) {
