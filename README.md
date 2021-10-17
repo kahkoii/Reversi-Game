@@ -64,18 +64,20 @@ The 8 directions ranging clockwise from N for North to NW for North-West, are po
 
 Whenever a new piece is placed on the board, the Node that the piece is placed on will call a recursive function “FlipRequest” on all 8 of its surrounding Nodes, and all of the Nodes which have called the function will continue to recursively call the function on the Nodes in the same direction, until either a same-coloured piece is found, the last piece in that direction is reached, or the edge of the board is reached. Then, depending on what value is passed back to the original Node through the recursive function, the colours of the Nodes will change. Using a recursive function is necessary because it allows the program to automatically “crawl” through the pieces on the board and make changes if a set of conditions are true, and break out of the function when some conditions are met, allowing us to apply the rules of Reversi to our game without hardcoding, which would provide the added benefit of being able to run on a board larger than 8 x 8.
 
-
-
 1. Originally, there is an empty spot on the board (green)
+
    ![Recursion Step 1](./ReportImages/recursion1.png)
 
 2. A new piece is placed on the board, and the FlipRequest function is called in all 8 directions
+
    ![Recursion Step 2](./ReportImages/recursion2.png)
 
 3. The recursive function is kept being called until the same coloured piece is found, an empty tile is reached, or the end of the board is reached
+
    ![Recursion Step 3](./ReportImages/recursion3.png)
 
 4. In the case where the same-coloured piece is found, a boolean value true is returned to the Node which called the function, and every Node that is between this current Node and the Node where the new piece was placed, will also return true to the previous Node, whilst flipping its colour to the opposite colour, until the original Node is reached, exiting the recursive function
+
    ![Recursion Step 4](./ReportImages/recursion4.png)
 
 ## AI Class (Contribution by Dong Kiat)
@@ -99,8 +101,6 @@ Alpha Beta Pruning is a search algorithm that helps to optimize the minimax algo
 ![Pseudocode Screenshot](./ReportImages/pseudocode2.png)
 
 Above is the minimax pseudocode obtained that utilizes the Alpha Beta Pruning algorithm. As can be seen, two more parameters have been added, which are alpha and beta respectively. Initially, alpha is a highly negative number and beta is a huge positive number. Both players start with the worst possible score. Whenever the maximum score that the minimizing player is assured of becomes less than the minimum score that the maximizing player is assured of, the maximizing player need not consider further descendants of this node, as they will never be reached.
-
-
 
 ### Performance Comparison
 
